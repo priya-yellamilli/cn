@@ -1,0 +1,97 @@
+#include <stdio.h>
+
+int main()
+{
+    int total, window, sent = 0, i, ack, resend;
+    int frame[50] = {0};
+
+    printf("Enter total frames: ");
+    scanf("%d", &total);
+
+    printf("Enter window size: ");
+    scanf("%d", &window);
+
+    printf("\n--- Selective Repeat ARQ Simulation ---\n");
+
+    while (sent < total)
+    {
+        printf("\nSending window: ");
+        for (i = sent; i < sent + window && i < total; i++)
+            if (frame[i] == 0)
+                printf("%d ", i);
+        printf("\n");
+
+        for (i = sent; i < sent + window && i < total; i++)
+        {
+            if (frame[i] == 0)
+            {
+                printf("Did frame %d get ACK? (1=Yes, 0=Lost): ", i);
+                scanf("%d", &ack);
+
+                if (ack == 1)
+                {
+                    printf("ACK received for frame %d\n", i);
+                    frame[i] = 1;
+                }
+                else
+                    printf("Frame %d lost!\n", i);
+            }
+        }
+
+        printf("\nEnter lost frame number to resend (-1 to skip): ");
+        scanf("%d", &resend);
+
+        while (resend != -1)
+        {
+            if (resend >= sent && resend < total && frame[resend] == 0)
+            {
+                printf("Resending frame %d...\n", resend);
+                printf("ACK received for frame %d\n", resend);
+                frame[resend] = 1;
+            }
+            else
+                printf("Invalid or already ACKed frame!\n");
+
+            printf("Enter next frame to resend (-1 to stop): ");
+            scanf("%d", &resend);
+        }
+
+        // Slide window
+        while (sent < total && frame[sent] == 1)
+            sent++;
+    }
+
+    printf("\nAll frames sent and acknowledged successfully!\n");
+    return 0;
+}
+
+output:
+Enter total frames: 5
+Enter window size: 3
+
+--- Selective Repeat ARQ Simulation ---
+
+Sending window: 0 1 2 
+
+Did frame 0 get ACK? (1=Yes, 0=Lost): 1
+ACK received for frame 0
+Did frame 1 get ACK? (1=Yes, 0=Lost): 0
+Frame 1 lost!
+Did frame 2 get ACK? (1=Yes, 0=Lost): 1
+ACK received for frame 2
+
+Enter lost frame number to resend (-1 to skip): 1
+Resending frame 1...
+ACK received for frame 1
+Enter next frame to resend (-1 to stop): -1
+
+Sending window: 3 4 
+
+Did frame 3 get ACK? (1=Yes, 0=Lost): 1
+ACK received for frame 3
+Did frame 4 get ACK? (1=Yes, 0=Lost): 1
+ACK received for frame 4
+
+Enter lost frame number to resend (-1 to skip): -1
+
+All frames sent and acknowledged successfully!
