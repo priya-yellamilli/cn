@@ -1,0 +1,33 @@
+
+#include <stdio.h>
+#define INF 9999
+int main() {
+int n, g[20][20], d[20], v[20]={0}, src;
+printf("Nodes: "); scanf("%d",&n);
+printf("Matrix:\n");
+for(int i=0;i<n;i++) for(int j=0;j<n;j++) scanf("%d",&g[i][j]);
+printf("Source: "); scanf("%d",&src);
+for(int i=0;i<n;i++) d[i]= (g[src][i]?g[src][i]:INF);
+d[src]=0; v[src]=1;
+for(int k=0;k<n-1;k++){
+int u=-1,min=INF;
+for(int i=0;i<n;i++) if(!v[i] && d[i]<min) min=d[i],u=i;
+v[u]=1;
+for(int j=0;j<n;j++) if(!v[j] && g[u][j] && d[u]+g[u][j]<d[j]) d[j]=d[u]+g[u][j];
+}
+for(int i=0;i<n;i++) printf("Dist to %d = %d\n",i,d[i]);
+}
+
+
+Output:
+Nodes: 4
+Matrix:
+0 4 0 8
+4 0 2 0
+0 2 0 3
+8 0 3 0
+Source: 0
+Dist to 0 = 0
+Dist to 1 = 4
+Dist to 2 = 6
+Dist to 3 = 8
