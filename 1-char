@@ -1,0 +1,62 @@
+#include <stdio.h>
+#include <string.h>
+
+int main()
+{
+    int i = 0, j = 0, n;
+    char a[20], b[50];
+
+    printf("Enter string:\n");
+    scanf("%s", a);
+
+    n = strlen(a);
+
+    // Add starting delimiter "dle stx"
+    b[j++] = 'd';
+    b[j++] = 'l';
+    b[j++] = 'e';
+    b[j++] = 's';
+    b[j++] = 't';
+    b[j++] = 'x';
+
+    // Character stuffing
+    while (i < n)
+    {
+        if (a[i] == 'd' && a[i+1] == 'l' && a[i+2] == 'e')
+        {
+            // Stuff another "dle"
+            b[j++] = 'd';
+            b[j++] = 'l';
+            b[j++] = 'e';
+            i += 3;
+        }
+        else
+        {
+            b[j++] = a[i++];
+        }
+    }
+
+    // Add ending delimiter "dle etx"
+    b[j++] = 'd';
+    b[j++] = 'l';
+    b[j++] = 'e';
+    b[j++] = 'e';
+    b[j++] = 't';
+    b[j++] = 'x';
+
+    b[j] = '\0';
+
+    printf("\nFrame after stuffing:\n");
+    printf("%s", b);
+
+    return 0;
+}
+
+
+
+
+Enter string:
+abcdleeff
+Frame after stuffing:
+dlestxabcdledleeffdleetx
+
