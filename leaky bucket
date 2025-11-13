@@ -1,0 +1,64 @@
+#include <stdio.h>
+
+int main() {
+    int bucket_size, output_rate, time_slots, incoming;
+    int stored = 0, dropped = 0;
+
+    printf("Enter bucket capacity: ");
+    scanf("%d", &bucket_size);
+
+    printf("Enter output rate per time slot: ");
+    scanf("%d", &output_rate);
+
+    printf("Enter number of time slots: ");
+    scanf("%d", &time_slots);
+
+    for (int i = 1; i <= time_slots; i++) {
+        printf("\nTime slot %d: Enter number of incoming packets: ", i);
+        scanf("%d", &incoming);
+
+        printf("Incoming packets = %d\n", incoming);
+
+        // Overflow check
+        if (incoming + stored > bucket_size) {
+            dropped = (incoming + stored) - bucket_size;
+            stored = bucket_size;
+            printf("Bucket Overflow! Dropped packets = %d\n", dropped);
+        } else {
+            stored += incoming;
+        }
+
+        // Transmit packets
+        if (stored > output_rate) {
+            stored -= output_rate;
+            printf("Transmitted: %d | Packets left in bucket: %d\n", output_rate, stored);
+        } else {
+            printf("Transmitted: %d | Packets left in bucket: 0\n", stored);
+            stored = 0;
+        }
+    }
+
+    // Empty the bucket after time slots
+    while (stored > 0) {
+        if (stored > output_rate) {
+            stored -= output_rate;
+            printf("Transmitted: %d | Packets left in bucket: %d\n", output_rate, stored);
+        } else {
+            printf("Transmitted: %d | Packets left in bucket: 0\n", stored);
+            stored = 0;
+        }
+    }
+
+    printf("\nAll packets transmitted successfully.\n");
+
+    return 0;
+}
+
+output:
+Bucket capacity: 10
+Output rate: 4
+Time slots: 3
+
+Time slot 1 incoming: 5
+Time slot 2 incoming: 8
+Time slot 3 incoming: 3
