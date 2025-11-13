@@ -1,0 +1,77 @@
+#include <stdio.h>
+#define INF 999
+
+int main() {
+    int cost[10][10], dist[10][10], via[10][10];
+    int n, i, j, k;
+
+    printf("Enter number of nodes: ");
+    scanf("%d", &n);
+
+    printf("Enter cost matrix (use 999 for no direct link):\n");
+    for (i = 0; i < n; i++)
+        for (j = 0; j < n; j++)
+            scanf("%d", &cost[i][j]);
+
+    // Initialize distance and via matrices
+    for (i = 0; i < n; i++)
+        for (j = 0; j < n; j++) {
+            dist[i][j] = cost[i][j];
+            via[i][j] = j;
+        }
+
+    // Distance vector update (Bellman-Ford)
+    for (k = 0; k < n; k++)
+        for (i = 0; i < n; i++)
+            for (j = 0; j < n; j++)
+                if (dist[i][j] > dist[i][k] + dist[k][j]) {
+                    dist[i][j] = dist[i][k] + dist[k][j];
+                    via[i][j] = k;
+                }
+
+    // Display routing table for each node
+    for (i = 0; i < n; i++) {
+        printf("\nRouting table for node %d:\n", i + 1);
+        printf("Destination\tNext Hop\tDistance\n");
+        for (j = 0; j < n; j++)
+            printf("%d\t\t%d\t\t%d\n", j + 1, via[i][j] + 1, dist[i][j]);
+    }
+
+    return 0;
+}
+
+output:
+Enter number of nodes: 4
+Enter cost matrix (use 999 for no direct link):
+0 2 999 1
+2 0 3 2
+999 3 0 4
+1 2 4 0
+
+Routing table for node 1:
+Destination     Next Hop       Distance
+1               1              0
+2               2              2
+3               4              5
+4               4              1
+
+Routing table for node 2:
+Destination     Next Hop       Distance
+1               1              2
+2               2              0
+3               3              3
+4               4              2
+
+Routing table for node 3:
+Destination     Next Hop       Distance
+1               2              5
+2               2              3
+3               3              0
+4               4              4
+
+Routing table for node 4:
+Destination     Next Hop       Distance
+1               1              1
+2               2              2
+3               2              5
+4               4              0
