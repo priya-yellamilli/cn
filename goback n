@@ -1,0 +1,61 @@
+#include <stdio.h>
+
+int main()
+{
+    int total, window, sent = 0, lost, i;
+
+    printf("Enter total frames: ");
+    scanf("%d", &total);
+
+    printf("Enter window size: ");
+    scanf("%d", &window);
+
+    printf("\n--- Go-Back-N Simulation ---\n\n");
+
+    while (sent < total)
+    {
+        printf("Sending: ");
+        for (i = sent; i < sent + window && i < total; i++)
+            printf("%d ", i);
+        printf("\n");
+
+        printf("Enter lost frame (-1 if none): ");
+        scanf("%d", &lost);
+
+        if (lost >= sent && lost < sent + window)
+        {
+            printf("Frame %d lost! Resending from %d\n\n", lost, lost);
+            sent = lost;  // resend from lost frame
+        }
+        else
+        {
+            sent += window;  // move window
+            if (sent > total)
+                sent = total;
+            printf("All frames till %d acknowledged\n\n", sent - 1);
+        }
+    }
+
+    printf("All frames sent successfully!\n");
+    return 0;
+}
+
+
+Enter total frames: 10
+Enter window size: 4
+
+--- Go-Back-N Simulation ---
+
+Sending: 0 1 2 3
+Enter lost frame (-1 if none): 2
+Frame 2 lost! Resending from 2
+
+Sending: 2 3 4 5
+Enter lost frame (-1 if none): -1
+All frames till 5 acknowledged
+
+Sending: 6 7 8 9
+Enter lost frame (-1 if none): -1
+All frames till 9 acknowledged
+
+All frames sent successfully!
